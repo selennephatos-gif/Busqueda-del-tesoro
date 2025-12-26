@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>La Búsqueda del Tesoro</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background: #1a1a1a; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: #333; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; max-width: 400px; width: 90%; }
+        input, select, button { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none; }
+        button { background: #e63946; color: white; font-weight: bold; cursor: pointer; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div id="step1">
+        <h2>¿Quién anda ahí?</h2>
+        <input type="text" id="userName" placeholder="Escribe tu nombre">
+        <button onclick="nextStep(2)">Continuar</button>
+    </div>
+
+    <div id="step2" class="hidden">
+        <h2 id="welcomeText"></h2>
+        <p>¿Qué prefieres ver/escuchar?</p>
+        <select id="preference">
+            <option value="accion">Películas de Acción</option>
+            <option value="terror">Series de Terror</option>
+            <option value="rock">Música Rock</option>
+            <option value="pop">Música Pop</option>
+        </select>
+        <button onclick="generateClue()">Enviar preferencias</button>
+    </div>
+
+    <div id="step3" class="hidden">
+        <h2>¿Estás listo para la búsqueda?</h2>
+        <p id="finalClue" style="font-style: italic; color: #f1fa8c;"></p>
+        <button onclick="alert('¡Que comience el juego!')">¡EMPEZAR!</button>
+    </div>
+</div>
+
+<script>
+    function nextStep(step) {
+        const name = document.getElementById('userName').value;
+        if(name === "") return alert("¡Dime tu nombre!");
+        
+        document.getElementById('step1').classList.add('hidden');
+        document.getElementById('step2').classList.remove('hidden');
+        document.getElementById('welcomeText').innerText = "Hola, " + name;
+    }
+
+    function generateClue() {
+        const pref = document.getElementById('preference').value;
+        let clue = "";
+
+        // AQUÍ CONFIGURAS TUS PISTAS
+        if(pref === "accion") clue = "PISTA 1: Busca donde guardas el 'combustible' para tus maratones de adrenalina (La cocina).";
+        if(pref === "terror") clue = "PISTA 1: El miedo acecha en el lugar más oscuro y frío de la casa... (El sótano o bajo la cama).";
+        if(pref === "rock") clue = "PISTA 1: Sigue el ritmo hasta donde el sonido se guarda en silencio (Tus audífonos o estante de discos).";
+        if(pref === "pop") clue = "PISTA 1: Brillas como una estrella, busca la pista donde te miras cada mañana (El espejo).";
+
+        document.getElementById('step2').classList.add('hidden');
+        document.getElementById('step3').classList.remove('hidden');
+        document.getElementById('finalClue').innerText = clue;
+    }
+</script>
+
+</body>
+</html>
