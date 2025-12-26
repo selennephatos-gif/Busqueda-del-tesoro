@@ -2,68 +2,144 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>La Búsqueda del Tesoro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Búsqueda del Tesoro</title>
     <style>
-        body { font-family: 'Arial', sans-serif; background: #1a1a1a; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: #333; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; max-width: 400px; width: 90%; }
-        input, select, button { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none; }
-        button { background: #e63946; color: white; font-weight: bold; cursor: pointer; }
+        body { 
+            background-color: #70e0e8; /* El color azul claro de tu imagen */
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container { text-align: center; width: 90%; max-width: 600px; position: relative; }
+
+        h1 { color: #000; font-size: 2.5rem; margin-bottom: 40px; }
+
+        /* Estilo de los botones tipo "nube" de tu imagen */
+        .btn-choice {
+            background-color: #95af9a; /* Verde salvia */
+            color: black;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            position: absolute; /* Para que estén esparcidos */
+            transition: transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn-choice:hover { transform: scale(1.1); background-color: #a8c3ad; }
+        .btn-choice.selected { border: 3px solid #ff4d4d; }
+
+        /* Posiciones de los botones (simulando tu dibujo) */
+        #btn1 { top: -20px; left: 50%; }
+        #btn2 { top: 40px; right: 0; }
+        #btn3 { top: 100px; left: 20%; }
+        #btn4 { top: 160px; right: 10%; }
+        #btn5 { top: 220px; left: 0%; font-family: 'Georgia', serif; font-weight: bold; }
+        #btn6 { top: 260px; left: 40%; }
+        #btn7 { top: 320px; right: 5%; }
+
+        /* Botón de Obtener Pista (el rojo de abajo) */
+        .btn-main {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 15px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 450px;
+            display: block;
+            width: 100%;
+        }
+
         .hidden { display: none; }
+        
+        /* Pantalla de la Pista */
+        .pista-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <div id="step1">
-        <h2>¿Quién anda ahí?</h2>
-        <input type="text" id="userName" placeholder="Escribe tu nombre">
-        <button onclick="nextStep(2)">Continuar</button>
+    <div class="container" id="game-container">
+        <div id="step-selection">
+            <h1>¿Cual es tu serie favorita?</h1>
+            
+            <button class="btn-choice" id="btn1" onclick="selectOption('Action')">Action</button>
+            <button class="btn-choice" id="btn2" onclick="selectOption('Stranger')">Stranger Ficcion</button>
+            <button class="btn-choice" id="btn3" onclick="selectOption('Office')">The Office</button>
+            <button class="btn-choice" id="btn4" onclick="selectOption('Friends')">FRIENDS</button>
+            <button class="btn-choice" id="btn5" onclick="selectOption('GOT')">GAME OF THRONES</button>
+            <button class="btn-choice" id="btn6" onclick="selectOption('Queens')">Queen's Gambit</button>
+            <button class="btn-choice" id="btn7" onclick="selectOption('Dark')">Dark</button>
+
+            <button class="btn-main" onclick="showClue()">Obtener Pista</button>
+        </div>
+
+        <div id="step-clue" class="hidden">
+            <div class="pista-card">
+                <h2 id="pregunta-final">¿Estas listo para la busqueda?</h2>
+                <p id="texto-pista" style="font-size: 1.2rem; color: #333;"></p>
+                <button class="btn-main" onclick="location.reload()">Volver a empezar</button>
+            </div>
+        </div>
     </div>
 
-    <div id="step2" class="hidden">
-        <h2 id="welcomeText"></h2>
-        <p>¿Qué prefieres ver/escuchar?</p>
-        <select id="preference">
-            <option value="accion">Películas de Acción</option>
-            <option value="terror">Series de Terror</option>
-            <option value="rock">Música Rock</option>
-            <option value="pop">Música Pop</option>
-        </select>
-        <button onclick="generateClue()">Enviar preferencias</button>
-    </div>
+    <script>
+        let opcionSeleccionada = "";
 
-    <div id="step3" class="hidden">
-        <h2>¿Estás listo para la búsqueda?</h2>
-        <p id="finalClue" style="font-style: italic; color: #f1fa8c;"></p>
-        <button onclick="alert('¡Que comience el juego!')">¡EMPEZAR!</button>
-    </div>
-</div>
+        function selectOption(val) {
+            opcionSeleccionada = val;
+            // Quitar marca de otros botones
+            document.querySelectorAll('.btn-choice').forEach(b => b.classList.remove('selected'));
+            // Marcar el seleccionado
+            event.target.classList.add('selected');
+        }
 
-<script>
-    function nextStep(step) {
-        const name = document.getElementById('userName').value;
-        if(name === "") return alert("¡Dime tu nombre!");
-        
-        document.getElementById('step1').classList.add('hidden');
-        document.getElementById('step2').classList.remove('hidden');
-        document.getElementById('welcomeText').innerText = "Hola, " + name;
-    }
+        function showClue() {
+            if (opcionSeleccionada === "") {
+                alert("¡Primero elige una serie!");
+                return;
+            }
 
-    function generateClue() {
-        const pref = document.getElementById('preference').value;
-        let clue = "";
+            const textoPista = document.getElementById('texto-pista');
+            
+            // AQUÍ EDITAS TUS PISTAS DEPENDIENDO DE LO QUE ELIJAN
+            if(opcionSeleccionada === 'Action') {
+                textoPista.innerText = "PISTA: Como en una peli de acción, el tesoro está donde se guarda el equipo de escape (Cerca de las llaves o la puerta).";
+            } 
+            else if(opcionSeleccionada === 'Stranger') {
+                textoPista.innerText = "PISTA: Para ir al 'Upside Down' necesitas bajar... busca en el lugar más bajo de la sala.";
+            }
+            else if(opcionSeleccionada === 'Office') {
+                textoPista.innerText = "PISTA: Parkour! Busca en el lugar más aburrido de la casa, donde alguien trabajaría.";
+            }
+            else if(opcionSeleccionada === 'Friends') {
+                textoPista.innerText = "PISTA: Estaré ahí para ti... busca detrás del sofá donde todos nos reunimos.";
+            }
+            else if(opcionSeleccionada === 'GOT') {
+                textoPista.innerText = "PISTA: El invierno se acerca. Busca en el lugar más frío de la cocina (El congelador).";
+            }
+            else {
+                textoPista.innerText = "PISTA: Has elegido bien. Tu primera pista está escondida dentro de un zapato izquierdo.";
+            }
 
-        // AQUÍ CONFIGURAS TUS PISTAS
-        if(pref === "accion") clue = "PISTA 1: Busca donde guardas el 'combustible' para tus maratones de adrenalina (La cocina).";
-        if(pref === "terror") clue = "PISTA 1: El miedo acecha en el lugar más oscuro y frío de la casa... (El sótano o bajo la cama).";
-        if(pref === "rock") clue = "PISTA 1: Sigue el ritmo hasta donde el sonido se guarda en silencio (Tus audífonos o estante de discos).";
-        if(pref === "pop") clue = "PISTA 1: Brillas como una estrella, busca la pista donde te miras cada mañana (El espejo).";
-
-        document.getElementById('step2').classList.add('hidden');
-        document.getElementById('step3').classList.remove('hidden');
-        document.getElementById('finalClue').innerText = clue;
-    }
-</script>
-
+            document.getElementById('step-selection').classList.add('hidden');
+            document.getElementById('step-clue').classList.remove('hidden');
+        }
+    </script>
 </body>
 </html>
