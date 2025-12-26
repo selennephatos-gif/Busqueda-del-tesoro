@@ -22,12 +22,16 @@
 
     <div id="step2" class="hidden">
         <h2 id="welcomeText"></h2>
-        <p>¿Qué prefieres ver/escuchar?</p>
+        <p>¿Qué género prefieres?</p>
         <select id="preference">
-            <option value="accion">Películas de Acción</option>
-            <option value="terror">Series de Terror</option>
-            <option value="rock">Música Rock</option>
-            <option value="pop">Música Pop</option>
+            <option value="accion">Acción</option>
+            <option value="terror">Terror</option>
+            <option value="romance">Romance</option>
+            <option value="misterio">Misterio</option>
+             <option value="comedia">Comedia</option>
+             <option value="ciencia ficcion">Ciencia Ficción</option>
+             <option value="drama">Drama</option>
+            
         </select>
         <button onclick="generateClue()">Enviar preferencias</button>
     </div>
@@ -56,9 +60,11 @@
         // AQUÍ CONFIGURAS TUS PISTAS
         if(pref === "accion") clue = "PISTA 1: Busca donde guardas el 'combustible' para tus maratones de adrenalina (La cocina).";
         if(pref === "terror") clue = "PISTA 1: El miedo acecha en el lugar más oscuro y frío de la casa... (El sótano o bajo la cama).";
-        if(pref === "rock") clue = "PISTA 1: Sigue el ritmo hasta donde el sonido se guarda en silencio (Tus audífonos o estante de discos).";
-        if(pref === "pop") clue = "PISTA 1: Brillas como una estrella, busca la pista donde te miras cada mañana (El espejo).";
-
+        if(pref === "romance") clue = "PISTA 1: Sigue el ritmo hasta donde el sonido se guarda en silencio (Tus audífonos o estante de discos).";
+        if(pref === "misterio") clue = "PISTA 1: Brillas como una estrella, busca la pista donde te miras cada mañana (El espejo).";
+        if(pref === "comedia") clue = "PISTA 1: Brillas como una hola hola busca la pista donde te miras cada mañana (El espejo).";
+          if(pref === "ciencia ficcion") clue = "PISTA 1:avatar o una estrella, busca la pista donde te miras cada mañana (El espejo).";
+          if(pref === "drama") clue = "PISTA 1: Brillas OMG la pista donde te miras cada mañana (El espejo).";
         document.getElementById('step2').classList.add('hidden');
         document.getElementById('step3').classList.remove('hidden');
         document.getElementById('finalClue').innerText = clue;
@@ -67,3 +73,4 @@
 
 </body>
 </html>
+
